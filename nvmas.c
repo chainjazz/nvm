@@ -232,11 +232,13 @@ int vmas_load(Vmas *vm, int fd) {
 	INT32 buf[4096];
 	INT32 *bufptr = buf;
 	// TODO: BIOS bi trebalo da bude ROM sa instrukcijama, a ne funkcija
-
+	
+	
+	
 	i = j = 0;
 	
 	// decipher and load program
-	while ( ( read(fd, bufptr, sizeof(INT32)) ) ) {
+	while ( ( fread(bufptr, sizeof(INT32), 1, stdin) ) ) {
 		*((INT32 *)bufptr) = ntohl(*((INT32 *)bufptr)); // ensures host endianess
 		
 		if ( vmas_drn(*((INT32 *)bufptr), RNKO) == 0 )
@@ -275,7 +277,7 @@ int vmas_bios(Vmas *vm) {
 	printf("\n\n============\n=== VMAS ===\n============\n\n");		
 	printf("\n\n Loading program... \n\n");
 	
-	dumpsize = vmas_load(vm, 0); // load (REDIREKCIJA STD ULAZA)
+	dumpsize = vmas_load(vm, stdin); // load (REDIREKCIJA STD ULAZA)
 	vmas_dump(vm, dumpsize); // show assembly
 	vmas_exec(vm); // execute
 	

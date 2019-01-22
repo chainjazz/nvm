@@ -2,12 +2,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <errno.h>
 #include <sys/types.h>
 #ifdef PLATFORM_WIN
-	#include <winsock.h>
+	#include <Winsock2.h>
 #else
+	#include <unistd.h>
 	#include <sys/socket.h>
 	#include <sys/wait.h>
 #endif
