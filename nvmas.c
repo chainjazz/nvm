@@ -1,15 +1,3 @@
-#define PLATFORM_WIN 1
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <sys/types.h>
-#ifdef PLATFORM_WIN
-	#include <winsock.h>
-#else
-	#include <sys/socket.h>
-	#include <sys/wait.h>
-#endif
 #include "nvmas.h"
 #include "nsec.h"
 
@@ -173,7 +161,7 @@ int vmas_fin(Vmas *vm) { // faza izvrsenja naredbe
 			vm->xn[vmas_drn(vm->rn, RNXN)] = vmas_drn(vm->rn, RNA);
 			break;
 		case OP_PPR:
-			vm->rn = vm->rn & 0xFFFF0000 + vm->bn;
+			vm->rn = vm->rn & (0xFFFF0000 + vm->bn);
 			vm->bn = vmas_drn(vm->rn, RNA) + 1;
 			break;		
 		default:
