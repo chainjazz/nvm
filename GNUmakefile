@@ -3,7 +3,7 @@ include $(GNUSTEP_MAKEFILES)/common.make
 
 CTOOL_NAME = vmas
 
-vmas_C_FILES = vmas.c sec.c vmaslib.c
+vmas_C_FILES = nvmas.c nvmaslib.c
 
 vmas_INCLUDE_DIRS = -I/usr/include/sys
 

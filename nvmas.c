@@ -1,10 +1,15 @@
+#define PLATFORM_WIN 1
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/wait.h>
+#ifdef PLATFORM_WIN
+	#include <winsock.h>
+#else
+	#include <sys/socket.h>
+	#include <sys/wait.h>
+#endif
 #include "nvmas.h"
 #include "nsec.h"
 
@@ -183,7 +188,7 @@ int vmas_fin(Vmas *vm) { // faza izvrsenja naredbe
 }
 
 int vmas_drn(INT32 rn, INT32 f) {
-	vmas_drn_generic(rn, f);
+	return vmas_drn_generic(rn, f);
 }
 
 int vmas_drn_x86(INT32 rn, INT32 f) { 
@@ -244,6 +249,8 @@ int vmas_load(Vmas *vm, int fd) {
 	
 	// decipher and load program
 	while ( ( read(fd, bufptr, sizeof(INT32)) ) ) {
+		*((INT32 *)bufptr) = ntohl(*((INT32 *)bufptr)); // ensures host endianess
+		
 		if ( vmas_drn(*((INT32 *)bufptr), RNKO) == 0 )
 			// kako v.masina zna granicu izmedju podataka i koda?
 			// odgovor je podaci idu na fiksnu adresu DATASEG

@@ -6,7 +6,7 @@
 */
 
 typedef int BOOL;
-typedef long INT64;
+// typedef long INT64;
 typedef short INT16;
 typedef int INT32;
 
