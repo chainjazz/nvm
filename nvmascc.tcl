@@ -108,7 +108,7 @@ proc rpneval {temp rpnexpr} {
 			[0-9] {
 				lappend asmops $token
 				lappend vrstack $token
-			}
+			}			
 		}
 	}
 	
@@ -125,9 +125,7 @@ proc tokenize {t} {
 	
 	foreach oto [rpneval $lhs [dijkstrasy $xinfx $oplist]] {
 		puts $oto
-	}
-	
-	#puts "AUM $lhs"
+	}	
 }
 
 while {1} {
@@ -135,5 +133,7 @@ while {1} {
 	tokenize $t
 	if {[eof $f]} break
 }
+
+puts "HLT 0"
 
 close $f

@@ -10,6 +10,7 @@ set instable [list\
 "ODF"\
 "MUA"\
 "AUM"\
+"NUA"\
 "PZA"\
 "NES"\
 "NUS"\
@@ -24,14 +25,13 @@ while {[gets stdin asmascii] != -1} {
 		^[A-Z]+.* {
 			set insline [split $asmascii]
 			#puts [lindex $insline 0]
-			puts [expr {
+			puts -nonewline stdout [binary format I [expr {int(
 				[lsearch $instable [lindex $insline 0]] * 0x1000000 +
-				[lindex $insline 1]
-				}]
-			
+				[lindex $insline 1])
+				}]]		
 		}
 		^[0-9]+.* {
-			puts $asmascii
+			puts -nonewline stdout [binary format I [expr {int($asmascii)}]]
 		}
 	}
 }
