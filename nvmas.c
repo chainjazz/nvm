@@ -72,13 +72,7 @@ int main() {
 	//cipherde_setupkey(CIPHERKEY, csptr);
 	
 	// start BIOS routine
-	vmas_bios(vmptr);		
-
-	////////
-	// start execution	
-	
-			
-	
+	vmas_bios(vmptr);
 	printf("{Final register state}\n");
 	vmas_dumpreg(vmptr);	
 	
@@ -173,10 +167,6 @@ int vmas_fin(Vmas *vm) { // faza izvrsenja naredbe
 	vm->rf = 0; // postavi fazu na pripremu (rezervisano za implementaciju kloka)
 	
 	return 1;
-}
-
-int vmas_drn(INT32 rn, INT32 f) {
-	return vmas_drn_generic(rn, f);
 }
 
 int vmas_drn_x86(INT32 rn, INT32 f) { 

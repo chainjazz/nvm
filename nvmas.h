@@ -1,21 +1,35 @@
-#define PLATFORM_WIN
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <sys/types.h>
-#ifdef PLATFORM_WIN
-	#include <Winsock2.h>
-#else
-	#include <unistd.h>
-	#include <sys/socket.h>
-	#include <sys/wait.h>
-#endif
+/********************|
+|* COMPILER OPTIONS */
+#define PLATFORM_NIX 0
+#define PLATFORM_WIN 1
+#define REALARCH_PPC 0
+#define REALARCH_X86 1
+/* ================ */
+#define	CCPLATFORM 	PLATFORM_WIN
+#define CCARCH		REALARCH_X86
+/* ================ *|
+\********************/
 	
 #ifndef VMAS_H
 	#define VMAS_H
 	
-	
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <errno.h>
+	#include <sys/types.h>
+	#if CCPLATFORM == PLATFORM_WIN
+		#include <Winsock2.h>
+	#elif CCPLATFORM == PLATFORM_NIX
+		#include <unistd.h>
+		#include <sys/socket.h>
+		#include <sys/wait.h>
+	#endif
+
+	#if CCARCH == REALARCH_X86
+		#define vmas_drn(n, f) vmas_drn_x86(n, f)
+	#elif CCARCH == REALARCH_PPC
+		#define vmas_drn(n, f) vmas_drn_generic(n, f)
+	#endif
  
 	typedef int BOOL;
 	// typedef long INT64;
