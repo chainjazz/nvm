@@ -24,9 +24,15 @@ $(MAIN_EXE): nvmas.c nvmaslib.c
 $(SUBA_EXE): nvmass.c
 	$(CC) -o $(SUBA_EXE) nvmass.c
 	
-run:
+run: preptest	
 	$(MAIN_EXE) <$(MAIN_DAT)/a.out
 	
+preptest: a.out
+
+a.out: srctest.vmt
+	cat srctest.vmt | tclsh nvmascc.tcl | tclsh nvmasas.tcl | tclsh nvmasln.tcl >a.out
+	
+
 newdata: config
 	$(SUBA_EXE) $(MAIN_DAT)/a.out
 	

@@ -73,7 +73,6 @@ int main() {
 	
 	// start BIOS routine
 	vmas_bios(vmptr);
-	printf("{Final register state}\n");
 	vmas_dumpreg(vmptr);	
 	
 	return 0;
@@ -128,6 +127,12 @@ int vmas_fin(Vmas *vm) { // faza izvrsenja naredbe
 		case OP_DEL:
 			vm->ak = vm->ak / vm->memory[vmas_drn(vm->rn, RNA)];
 			break;
+		case OP_SAF:
+			vm->ak = vm->ak + vm->memory[vmas_drn(vm->rn, RNA)];
+			break;
+		case OP_ODF:
+			vm->ak = vm->ak - vm->memory[vmas_drn(vm->rn, RNA)];
+			break;
 		case OP_MUA:
 			vm->ak = vm->memory[vmas_drn(vm->rn, RNA)];
 			break;
@@ -180,39 +185,26 @@ int vmas_drn_generic(INT32 rn, INT32 f) {
 int vmas_dump(Vmas *vm, INT16 l) {
 	// TODO: create a DUMP instruction instead
 	
-	int i;
-	INT16 naredba, adresa;		
-	
-	i = 0;
-	naredba = adresa = 0;
-	
-	printf(" BEGIN DUMP\n");
-	
-	printf("{Data segment list}\n");
+	int i = 0;
+	INT16 naredba = 0, adresa = 0;		
 	
 	for (i = DATASEG; i < DATASEG + l; i++)		
-			printf("0x%04X %08x\t\n", i, vm->memory[i]);
-	
-	printf("\n");
-	printf("{Disassembly}\n");
+			printf(" 0x%04X %08x\t\n", i, vm->memory[i]);	
 	
 	for (i = 0; i < l; i++) {
 		naredba = vmas_drn(vm->memory[i], RNKO);
 		adresa = vmas_drn(vm->memory[i], RNA);	
 	
-		printf("0x%04X: %s 0x%04X\t\n", CODESEG + i, 
+		printf(" 0x%04X: %s 0x%04X\t\n", CODESEG + i, 
 			instable[naredba][1], 
 			adresa);						
 	}
 	
-	printf(" END DUMP\n\n");
-	
 	return 0;
-	
 }
 
 int vmas_dumpreg(Vmas *vm) {	
-	printf("[AK:%4d]\n", vm->ak);	
+	printf("AK=%09d\n", vm->ak);	
 	
 	return 0;
 }
@@ -223,11 +215,9 @@ int vmas_load(Vmas *vm, int fd) {
 	INT32 *bufptr = buf;
 	// TODO: BIOS bi trebalo da bude ROM sa instrukcijama, a ne funkcija
 	
-	
-	
 	i = j = 0;
 	
-	// decipher and load program
+	// (decipher and) load program
 	while ( ( fread(bufptr, sizeof(INT32), 1, stdin) ) ) {
 		*((INT32 *)bufptr) = ntohl(*((INT32 *)bufptr)); // ensures host endianess
 		
@@ -248,32 +238,19 @@ int vmas_load(Vmas *vm, int fd) {
 int vmas_exec(Vmas *vm) {
 	vmas_fpn(vm);
 	
-	while(vmas_fin(vm)) {
-		printf("(tick)");
-		vmas_dumpreg(vm);
+	while(vmas_fin(vm)) {		
 		vmas_fpn(vm);
 	}
 	
-	printf("!halt!\n");
-		
 	return 0;
 }
 
 int vmas_bios(Vmas *vm) {
-	int dumpsize;
-	
-	dumpsize = 0;
+	int dumpsize = 0;
 
-	printf("\n\n============\n=== VMAS ===\n============\n\n");		
-	printf("\n\n Loading program... \n\n");
-	
 	dumpsize = vmas_load(vm, stdin); // load (REDIREKCIJA STD ULAZA)
 	vmas_dump(vm, dumpsize); // show assembly
 	vmas_exec(vm); // execute
 	
-	printf("\n\n Program done. No more code, exiting...\n");	
-	
-	// TODO: create a DUMP instruction instead	
-		
 	return 0;
 }
