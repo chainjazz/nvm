@@ -1,5 +1,8 @@
 set f [open "srctest.vmt" r]
 
+# memory map identifier -> address (offset)
+set malist [list]
+
 set oplist [list\
 	[list "*" "/"]\
 	[list "+" "-"]\
@@ -74,18 +77,17 @@ proc dijkstrasy {xi ol} {
 		set so [lreplace $so end end]
 		set solast [lindex $so end]
 	}
-	
+	#puts $xo
 	return $xo
 }
 
-proc rpneval {temp rpnexpr} {
-	set malist [list $temp]
+proc rpneval {temp malist rpnexpr} {
 	set asmops [list]
 	set vrstack [list]
 	set lplh ""
 	set rplh ""
-	
-	foreach token $rpnexpr {
+
+	foreach token $rpnexpr {	
 		switch -regexp $token {
 			[\*\/\+\-] {
 				set rplh [lsearch $malist [lindex $vrstack end]]
@@ -101,36 +103,52 @@ proc rpneval {temp rpnexpr} {
 				lappend asmops "AUM [lsearch $malist $temp]"
 				lappend vrstack "$temp"
 			}
-			[a-z] {
-				lappend malist $token
+			[a-z] {			
 				lappend vrstack $token
 			}
 			[0-9] {
 				lappend asmops $token
-				lappend vrstack $token
-			}			
+				lappend vrstack $token				
+			}
 		}
 	}
 	
+	#puts $malist
 	return $asmops
 }
 
-proc tokenize {t} {
-	global oplist	
-	set xinfx ""
-	set texpr [split $t "="]
-    set lhs [lindex $texpr 0]
-	set rhs [lindex $texpr 1]	
-	set xinfx $rhs
+proc tokenize {statement malistp oplist} {
+	upvar $malistp ma
 	
-	foreach oto [rpneval $lhs [dijkstrasy $xinfx $oplist]] {
+	set t ""
+	set texpr ""
+	set lhs ""
+	set rhs ""
+	
+	set t $statement
+	set texpr [split $t "="]
+    set lhs [regexp -all -inline {[a-z]+} [lindex $texpr 0]]
+	set rhs [lindex $texpr 1]
+	
+	# assuming "- 1" equals "not found" or "error"
+	if {[lsearch $ma $lhs] < 0} {
+		# only if not already in, otherwise we get redundant mem allocs
+		# 	(not a problem in itself, except for performance),
+		#	HOWEVER, TODO: literal ("parameter")
+		#	allocation is not mapped to identifiers (see next switch case)
+		#	thus, $malist is not the same as actual allocation  
+		lappend ma $lhs
+	}
+	
+	foreach oto [rpneval $lhs $ma [dijkstrasy $rhs $oplist]] {
 		puts $oto
-	}	
+	}	 
 }
 
 while {1} {
-	set t [gets $f]
-	tokenize $t
+	set statement [gets $f]
+	tokenize $statement malist $oplist
+	#puts $malist
 	if {[eof $f]} break
 }
 
