@@ -10,8 +10,8 @@ Additional implementation of a (primitive) compiler-assembler-linker pipeline.
 
 Useful for having an abstract target architecture for developing:
 
-* machine code programs
-* assemblers, languages, parsers, lexers, linkers
+* assemblers, languages, parsers, lexers, linkers 
+* compilers, interpreters
 * a small-footprint general purpose virtual computer
 * practical validators for exercises in machine code programming
 
@@ -36,10 +36,12 @@ An Objective-C version is also in the making.
 
 ### Makefile
 
-The makefile is old, please rewrite it. The directory structure
-has been flattened to a single directory.
+You can also compile the program using a BA system compatible with
+classic **make** utility syntax. Be sure to adapt it to your
+own environment. It is designed so that most of the variable
+stuff is at the top of the file, to get that "effortless" feel.
 
-### Compiler
+## Compiler
 
 As for the compiler-assembler-linker pipeline, it is implemented as
 three *Tcl* scripts that read from *stdin* and write to *stdout*, so
@@ -69,7 +71,4 @@ There needs to be a **delimiter** between literal values and
 sneak it in by putting a redundant "assignment" such as "t = 0" after
 declaring literal values.
 
-## Other files
-There are some other files included in this project reserved
-for future implementation, but they are not needed as yet.
 
