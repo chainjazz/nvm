@@ -6,7 +6,8 @@
 }
 
 #mcont {
-	margin: 1em;
+	margin: 1em auto 1em auto;
+	width: 80%
 }
 
 #mcont A {
@@ -25,7 +26,9 @@ BODY
 H2 {
 	color: #77AAFF;
 	font-family: Arial, sans-serif;
-	text-align: center;
+	/*text-align: center; /**/
+	width: 80%;
+	margin: 0 auto 0 auto;
 }
 
 H3 {
