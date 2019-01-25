@@ -4,3 +4,33 @@
 	width: 100%;
 	height: 1em;
 }
+
+#mcont {
+	margin: 1em;
+}
+
+#mcont A {
+	color: #77AAFF;
+	text-decoration: none;
+	font-family: Arial, sans-serif;
+}
+
+BODY 
+{
+	background-color: #FFFFFD;
+	padding: 0;
+	margin: 0;
+}
+
+H2 {
+	color: #77AAFF;
+	font-family: Arial, sans-serif;
+	text-align: center;
+}
+
+H3 {
+	text-transform: uppercase;
+	font-family: Arial;
+	letter-spacing: -1px;
+	
+}
