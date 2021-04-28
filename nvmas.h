@@ -1,7 +1,7 @@
 /********************|
 |* COMPILER OPTIONS */
-#define PLATFORM_NIX 0
-#define PLATFORM_WIN 1
+#define PLATFORM_NIX 1
+#define PLATFORM_WIN 0
 #define REALARCH_PPC 0
 #define REALARCH_X86 1
 /* ================ */
