@@ -16,6 +16,7 @@ CCUTIL = clang
 CFLAGS = -o $(MAIN_EXE)
 LFLAGS = -Xlinker\
 Ws2_32.lib
+LFLAGS = 
 CC = $(CCUTIL) $(CFLAGS) $(LFLAGS)
 
 $(MAIN_EXE): nvmas.c nvmaslib.c
